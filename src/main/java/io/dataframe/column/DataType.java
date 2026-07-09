@@ -1,6 +1,6 @@
-package io.dataframe.types;
+package io.dataframe.column;
 
-public enum DataTypes {
+public enum DataType {
     INT,
     LONG,
     FLOAT,
