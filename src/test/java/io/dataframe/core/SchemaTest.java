@@ -2,6 +2,7 @@ package io.dataframe.core;
 
 import io.dataframe.column.Column;
 import io.dataframe.column.IntColumn;
+import io.dataframe.exception.schema.DuplicateColumnException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -53,13 +54,15 @@ public class SchemaTest {
     void shouldRejectDuplicateColumnNames() {
         Column age = IntColumn.of("Age", 40, 50);
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        DuplicateColumnException exception = assertThrows(
+                DuplicateColumnException.class,
                 () -> Schema.of(ageColumn(), age)
         );
 
-        assertTrue(exception.getMessage().contains("Duplicate column name"));
-    }
+        assertEquals(
+                "Duplicate column name 'Age' found while creating the schema.",
+                exception.getMessage()
+        );    }
 
     @Test
     void shouldRejectNullColumns() {
