@@ -3,7 +3,6 @@ package io.dataframe.core;
 import io.dataframe.column.Column;
 import io.dataframe.column.IntColumn;
 import io.dataframe.exception.schema.DuplicateColumnException;
-import io.dataframe.exception.schema.InvalidColumnException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

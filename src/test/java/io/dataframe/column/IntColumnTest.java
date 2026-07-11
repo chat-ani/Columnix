@@ -1,6 +1,6 @@
 package io.dataframe.column;
 
-import io.dataframe.exception.schema.InvalidColumnException;
+import io.dataframe.exception.column.InvalidColumnException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

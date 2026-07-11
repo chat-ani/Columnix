@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * An immutable column storing primitive {@code long} values.
+ * An immutable column storing primitive {@code double} values.
  *
- * <p>A {@code LongColumn} stores values in a primitive {@code long[]} array,
+ * <p>A {@code DoubleColumn} stores values in a primitive {@code double[]} array,
  * avoiding boxing overhead while providing efficient random access.
  *
  * <p>This class is immutable and thread-safe.
@@ -17,22 +17,22 @@ import java.util.Objects;
  * @since 1.0.0
  * @author Anirban Chatterjee
  */
-public final class LongColumn extends Column {
+public final class DoubleColumn extends Column {
 
     /**
      * The values stored in this column.
      */
-    private final long[] values;
+    private final double[] values;
 
     /**
-     * Creates a new {@code LongColumn}.
+     * Creates a new {@code DoubleColumn}.
      *
      * @param name the column name
      * @param values the column values
      */
-    private LongColumn(String name, long... values) {
+    private DoubleColumn(String name, double... values) {
 
-        super(name, DataType.LONG);
+        super(name, DataType.DOUBLE);
 
         this.values = ValidationUtils.requireNonNull(
                 values,
@@ -41,14 +41,14 @@ public final class LongColumn extends Column {
     }
 
     /**
-     * Creates a new immutable {@code LongColumn}.
+     * Creates a new immutable {@code DoubleColumn}.
      *
      * @param name the column name
      * @param values the column values
-     * @return a new {@code LongColumn}
+     * @return a new {@code DoubleColumn}
      */
-    public static LongColumn of(String name, long... values) {
-        return new LongColumn(name, values);
+    public static DoubleColumn of(String name, double... values) {
+        return new DoubleColumn(name, values);
     }
 
     /**
@@ -56,8 +56,11 @@ public final class LongColumn extends Column {
      *
      * @param index the row index
      * @return the value at the specified index
-     * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})     */
-    public long get(int index) {
+     * @throws IndexOutOfBoundsException
+     *         if the index is out of range
+     *         ({@code index < 0 || index >= size()})
+     */
+    public double get(int index) {
         return values[index];
     }
 
@@ -66,7 +69,7 @@ public final class LongColumn extends Column {
      *
      * @return a copy of the values
      */
-    public long[] values() {
+    public double[] values() {
         return values.clone();
     }
 
@@ -82,11 +85,12 @@ public final class LongColumn extends Column {
             return true;
         }
 
-        if (!(object instanceof LongColumn other)) {
+        if (!(object instanceof DoubleColumn other)) {
             return false;
         }
 
-        return name().equals(other.name()) && Arrays.equals(values, other.values);
+        return name().equals(other.name())
+                && Arrays.equals(values, other.values);
     }
 
     @Override
@@ -96,7 +100,7 @@ public final class LongColumn extends Column {
 
     @Override
     public String toString() {
-        return "LongColumn[name="
+        return "DoubleColumn[name="
                 + name()
                 + ", values="
                 + Arrays.toString(values)
