@@ -1,4 +1,4 @@
-# ADR-007: Expression System Design
+# ADR-10: Expression System Design
 
 - **Status:** Accepted
 - **Date:** 2026-07-11

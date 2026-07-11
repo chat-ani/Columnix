@@ -1,4 +1,4 @@
-package io.dataframe.exception.schema;
+package io.dataframe.exception.column;
 
 import io.dataframe.exception.DataFrameException;
 

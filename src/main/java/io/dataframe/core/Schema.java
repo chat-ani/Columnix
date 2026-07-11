@@ -3,7 +3,7 @@ package io.dataframe.core;
 import io.dataframe.column.Column;
 import io.dataframe.exception.schema.ColumnNotFoundException;
 import io.dataframe.exception.schema.DuplicateColumnException;
-import io.dataframe.exception.schema.InvalidColumnException;
+import io.dataframe.exception.column.InvalidColumnException;
 import io.dataframe.util.ValidationUtils;
 
 import java.util.*;
