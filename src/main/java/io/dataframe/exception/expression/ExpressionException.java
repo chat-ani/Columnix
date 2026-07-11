@@ -10,7 +10,7 @@ import io.dataframe.exception.DataFrameException;
  * query expressions.
  *
  * <p>Concrete subclasses should represent specific expression-related failures,
- * such as invalid expressions, type mismatches, or evaluation errors.
+ * such as invalid expressions, getDataType mismatches, or evaluation errors.
  *
  * @since 1.0.0
  * @author Anirban Chatterjee

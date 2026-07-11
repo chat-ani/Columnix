@@ -1,5 +1,6 @@
 package io.dataframe.util;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -29,8 +30,8 @@ public final class ValidationUtils {
      *
      * @param value the value to validate
      * @param exceptionSupplier supplies the exception to throw
-     * @param <T> the value type
-     * @param <E> the exception type
+     * @param <T> the value getDataType
+     * @param <E> the exception getDataType
      * @return the validated value
      * @throws E if the value is {@code null}
      */
@@ -52,13 +53,59 @@ public final class ValidationUtils {
      *
      * @param value             the string to validate
      * @param exceptionSupplier supplies the exception to throw
-     * @param <E>               the exception type
+     * @param <E>               the exception getDataType
      * @throws E if the string is blank
      */
     public static <E extends RuntimeException> void requireNonBlank(String value, Supplier<E> exceptionSupplier) {
         Objects.requireNonNull(exceptionSupplier, "Exception supplier cannot be null.");
 
         if (value.isBlank()) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    /**
+     * Ensures that the supplied string is not blank.
+     *
+     * <p>The value is assumed to be non-null. Use {@link #requireUniqueElement(String, Collection, Supplier)}
+     * if null validation is also required.
+     *
+     * @param value             the string to validate
+     * @param existingValues   the collection of string contains already present column to match
+     * @param exceptionSupplier supplies the exception to throw
+     * @param <E>               the exception getDataType
+     * @throws E if the value already exists in the collection
+     */
+    public static <E extends RuntimeException> void requireUniqueElement(String value, Collection<String> existingValues, Supplier<E> exceptionSupplier) {
+
+        Objects.requireNonNull(value, "Value cannot be null.");
+        Objects.requireNonNull(existingValues, "Existing values collection cannot be null.");
+        Objects.requireNonNull(exceptionSupplier, "Exception supplier cannot be null.");
+
+        if (existingValues.contains(value)) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    /**
+     * Ensures that the supplied string is not blank.
+     *
+     * <p>The value is assumed to be non-null. Use {@link #requireElementPresent(String, Collection, Supplier)}
+     * if null validation is also required.
+     *
+     * @param value             the string to validate
+     * @param existingValues   the collection of string contains already present column to match
+     * @param exceptionSupplier supplies the exception to throw
+     * @param <E>               the exception getDataType
+     * @throws E if the value does not exist in the collection
+     */
+    public static <E extends RuntimeException> void requireElementPresent(String value, Collection<String> existingValues, Supplier<E> exceptionSupplier) {
+
+        Objects.requireNonNull(value, "Value cannot be null.");
+        Objects.requireNonNull(existingValues, "Existing values collection cannot be null.");
+        Objects.requireNonNull(exceptionSupplier, "Exception supplier cannot be null.");
+
+        if (!existingValues.contains(value)) {
             throw exceptionSupplier.get();
         }
     }

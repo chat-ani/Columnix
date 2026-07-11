@@ -4,7 +4,7 @@ package io.dataframe.exception;
  * Base class for all unchecked exceptions thrown by the DataFrame library.
  *
  * <p>All library-specific runtime exceptions extend this class, allowing
- * applications to catch a single exception type when appropriate.
+ * applications to catch a single exception getDataType when appropriate.
  */
 public abstract class DataFrameException extends RuntimeException {
 

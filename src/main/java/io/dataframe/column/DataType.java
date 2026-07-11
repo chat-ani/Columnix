@@ -4,7 +4,7 @@ package io.dataframe.column;
  * Defines the supported data types for columns within the DataFrame framework.
  * <p>
  * This enumeration is used by {@link Column} instances to specify the nature
- * of the primitive or object data they encapsulate, ensuring type safety and
+ * of the primitive or object data they encapsulate, ensuring getDataType safety and
  * enabling optimized storage strategies.
  * </p>
  *
