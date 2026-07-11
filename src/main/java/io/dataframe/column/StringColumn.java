@@ -7,48 +7,57 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * An immutable column storing primitive {@code long} values.
+ * An immutable column storing {@link String} values.
  *
- * <p>A {@code LongColumn} stores values in a primitive {@code long[]} array,
- * avoiding boxing overhead while providing efficient random access.
+ * <p>A {@code StringColumn} stores values in a {@code String[]} array while
+ * preserving the original text exactly as provided. Empty strings and blank
+ * strings are permitted, but {@code null} values are not.
  *
  * <p>This class is immutable and thread-safe.
  *
  * @since 1.0.0
  * @author Anirban Chatterjee
  */
-public final class LongColumn extends Column {
+public final class StringColumn extends Column {
 
     /**
      * The values stored in this column.
      */
-    private final long[] values;
+    private final String[] values;
 
     /**
-     * Creates a new {@code LongColumn}.
+     * Creates a new {@code StringColumn}.
      *
      * @param name the column name
      * @param values the column values
      */
-    private LongColumn(String name, long... values) {
+    private StringColumn(String name, String... values) {
 
-        super(name, DataType.LONG);
+        super(name, DataType.STRING);
 
-        this.values = ValidationUtils.requireNonNull(
+        String[] validatedValues = ValidationUtils.requireNonNull(
                 values,
                 () -> new InvalidColumnException("Column values cannot be null.")
-        ).clone();
+        );
+
+        ValidationUtils.requireNoNullElements(
+                validatedValues,
+                () -> new InvalidColumnException("Column values cannot contain null elements.")
+        );
+
+
+        this.values = validatedValues.clone();
     }
 
     /**
-     * Creates a new immutable {@code LongColumn}.
+     * Creates a new immutable {@code StringColumn}.
      *
      * @param name the column name
      * @param values the column values
-     * @return a new {@code LongColumn}
+     * @return a new {@code StringColumn}
      */
-    public static LongColumn of(String name, long... values) {
-        return new LongColumn(name, values);
+    public static StringColumn of(String name, String... values) {
+        return new StringColumn(name, values);
     }
 
     /**
@@ -58,7 +67,7 @@ public final class LongColumn extends Column {
      * @return the value at the specified index
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})
      */
-    public long get(int index) {
+    public String get(int index) {
         return values[index];
     }
 
@@ -67,7 +76,7 @@ public final class LongColumn extends Column {
      *
      * @return a copy of the values
      */
-    public long[] values() {
+    public String[] values() {
         return values.clone();
     }
 
@@ -83,11 +92,12 @@ public final class LongColumn extends Column {
             return true;
         }
 
-        if (!(object instanceof LongColumn other)) {
+        if (!(object instanceof StringColumn other)) {
             return false;
         }
 
-        return name().equals(other.name()) && Arrays.equals(values, other.values);
+        return name().equals(other.name())
+                && Arrays.equals(values, other.values);
     }
 
     @Override
@@ -97,7 +107,7 @@ public final class LongColumn extends Column {
 
     @Override
     public String toString() {
-        return "LongColumn[name="
+        return "StringColumn[name="
                 + name()
                 + ", values="
                 + Arrays.toString(values)
