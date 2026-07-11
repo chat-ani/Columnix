@@ -110,4 +110,16 @@ public final class ValidationUtils {
         }
     }
 
+    public static <T, E extends RuntimeException> void requireNoNullElements(
+            T[] values,
+            Supplier<E> exceptionSupplier) {
+
+        Objects.requireNonNull(exceptionSupplier, "Exception supplier cannot be null.");
+
+        for (T value : values) {
+            if (value == null) {
+                throw exceptionSupplier.get();
+            }
+        }
+    }
 }
