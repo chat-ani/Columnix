@@ -63,7 +63,7 @@ public class DataFrameTest {
         DataFrame dataFrame = DataFrame.of(ageColumn(), salaryColumn());
         Column column = dataFrame.column("Salary");
 
-        assertEquals("Salary", column.getName());
+        assertEquals("Salary", column.name());
     }
 
     @Test

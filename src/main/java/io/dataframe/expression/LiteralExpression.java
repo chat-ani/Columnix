@@ -14,7 +14,7 @@ import java.util.Objects;
  *
  * <p>This class is immutable and thread-safe.
  *
- * @param <T> the type of the literal value
+ * @param <T> the getDataType of the literal value
  *
  * @since 1.0.0
  * @author Anirban Chatterjee
@@ -36,7 +36,7 @@ public final class LiteralExpression<T> implements Expression {
      * Creates a {@code LiteralExpression} from the supplied value.
      *
      * @param value the literal value
-     * @param <T> the type of the literal value
+     * @param <T> the getDataType of the literal value
      * @return a new {@code LiteralExpression}
      */
     public static <T> LiteralExpression<T> of(T value) {

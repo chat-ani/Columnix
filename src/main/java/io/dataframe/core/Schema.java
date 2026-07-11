@@ -3,6 +3,8 @@ package io.dataframe.core;
 import io.dataframe.column.Column;
 import io.dataframe.exception.schema.ColumnNotFoundException;
 import io.dataframe.exception.schema.DuplicateColumnException;
+import io.dataframe.exception.schema.InvalidColumnException;
+import io.dataframe.util.ValidationUtils;
 
 import java.util.*;
 
@@ -51,11 +53,16 @@ public final class Schema {
      * @throws IllegalArgumentException if the column name is null or blank
      */
     private static void validateColumnName(String columnName) {
-        if (columnName == null || columnName.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Column name cannot be null or blank."
-            );
-        }
+
+        ValidationUtils.requireNonNull(
+                columnName,
+                () -> new InvalidColumnException("Column name cannot be null.")
+        );
+
+        ValidationUtils.requireNonBlank(
+                columnName,
+                () -> new InvalidColumnException("Column name cannot be blank.")
+        );
     }
 
     /**
@@ -81,17 +88,17 @@ public final class Schema {
 
             validateColumnName(String.valueOf(column));
 
-            if (columnMap.containsKey(column.getName())) {
+            if (columnMap.containsKey(column.name())) {
                 throw new DuplicateColumnException(
                         String.format(
                                 "Duplicate column name '%s' found while creating the schema.",
-                                column.getName()
+                                column.name()
                         )
                 );
             }
 
             columnList.add(column);
-            columnMap.put(column.getName(), column);
+            columnMap.put(column.name(), column);
         }
 
         return new Schema(

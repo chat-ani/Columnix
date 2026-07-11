@@ -68,7 +68,7 @@ public final class DataFrame {
                 throw new InvalidColumnSizeException(
                         String.format(
                                 "Column '%s' contains %d rows, but expected %d rows.",
-                                column.getName(),
+                                column.name(),
                                 column.size(),
                                 expectedRowCount
                         )

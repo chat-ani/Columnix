@@ -3,6 +3,7 @@ package io.dataframe.core;
 import io.dataframe.column.Column;
 import io.dataframe.column.IntColumn;
 import io.dataframe.exception.schema.DuplicateColumnException;
+import io.dataframe.exception.schema.InvalidColumnException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -45,9 +46,9 @@ public class SchemaTest {
         Schema schema = Schema.of(ageColumn(), salaryColumn(), idColumn());
         List<Column> columns = schema.columns();
 
-        assertEquals("Age", columns.get(0).getName());
-        assertEquals("Salary", columns.get(1).getName());
-        assertEquals("Id", columns.get(2).getName());
+        assertEquals("Age", columns.get(0).name());
+        assertEquals("Salary", columns.get(1).name());
+        assertEquals("Id", columns.get(2).name());
     }
 
     @Test
@@ -66,6 +67,7 @@ public class SchemaTest {
 
     @Test
     void shouldRejectNullColumns() {
+
         assertThrows(
                 NullPointerException.class,
                 () -> Schema.of(ageColumn(), null)
@@ -77,7 +79,7 @@ public class SchemaTest {
         Schema schema = Schema.of(ageColumn(), salaryColumn());
         Column column = schema.column("Salary");
 
-        assertEquals("Salary", column.getName());
+        assertEquals("Salary", column.name());
     }
 
     @Test
