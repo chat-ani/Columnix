@@ -146,17 +146,16 @@ public final class Schema {
      *                                  column with the specified name exists
      */
     public Column column(String columnName) {
-        validateColumnName(columnName);
-        Column column = columnMap.get(columnName);
-        if (column == null) {
-            throw new ColumnNotFoundException(
-                    String.format(
-                            "Column '%s' does not exist in the schema.",
-                            columnName
-                    )
-            );
-        }
-        return column;
+
+        ValidationUtils.requireElementPresent(
+                columnName,
+                columnMap.keySet(),
+                () -> new ColumnNotFoundException(
+                        "Column '" + columnName + "' could not be found in the schema."
+                )
+        );
+
+        return columnMap.get(columnName);
     }
 
     /**

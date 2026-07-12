@@ -1,6 +1,8 @@
 package io.dataframe.expression.evaluation;
 
+import io.dataframe.column.Column;
 import io.dataframe.core.DataFrame;
+import io.dataframe.expression.ColumnExpression;
 import io.dataframe.expression.Expression;
 import io.dataframe.expression.LiteralExpression;
 
@@ -66,6 +68,13 @@ final class ExpressionEvaluator {
 
         if (expression instanceof LiteralExpression<?> literalExpression) {
             return literalExpression.value();
+        }
+
+        if (expression instanceof ColumnExpression columnExpression) {
+
+            Column column = dataFrame.column(columnExpression.name());
+
+            return column.value(rowIndex);
         }
 
         throw new UnsupportedOperationException(
