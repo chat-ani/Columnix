@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataFrameTest {
+class DataFrameTest {
 
     private Column ageColumn() {
         return IntColumn.of("Age", 20, 30, 40);
