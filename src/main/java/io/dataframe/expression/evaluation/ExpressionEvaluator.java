@@ -2,6 +2,7 @@ package io.dataframe.expression.evaluation;
 
 import io.dataframe.core.DataFrame;
 import io.dataframe.expression.Expression;
+import io.dataframe.expression.LiteralExpression;
 
 import java.util.Objects;
 
@@ -37,11 +38,12 @@ final class ExpressionEvaluator {
      * @param expression the expression to evaluate
      * @param dataFrame  the DataFrame providing column values
      * @param rowIndex   the zero-based row index
+     * @return
      * @throws NullPointerException          if {@code expression} or {@code dataFrame} is {@code null}
      * @throws IndexOutOfBoundsException     if {@code rowIndex} is outside the DataFrame bounds
      * @throws UnsupportedOperationException if the expression type is not supported
      */
-    static void evaluate(
+    static Object evaluate(
             Expression expression,
             DataFrame dataFrame,
             int rowIndex) {
@@ -62,8 +64,13 @@ final class ExpressionEvaluator {
             );
         }
 
+        if (expression instanceof LiteralExpression<?> literalExpression) {
+            return literalExpression.value();
+        }
+
         throw new UnsupportedOperationException(
-                "Expression evaluation has not been implemented yet."
+                "Unsupported expression type: "
+                        + expression.getClass().getSimpleName()
         );
     }
 }
