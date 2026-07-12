@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SchemaTest {
+class SchemaTest {
 
     private Column ageColumn() {
         return IntColumn.of("Age", 20, 30);
