@@ -62,4 +62,18 @@ public abstract class Column {
      * @return the column size
      */
     public abstract int size();
+
+    /**
+     * Returns the value stored at the specified row index.
+     *
+     * <p>This method provides type-independent access to column values and is
+     * primarily intended for internal framework components such as expression
+     * evaluation. Concrete column implementations may also expose type-specific
+     * accessors (for example, {@code get(int)}) to avoid boxing overhead.
+     *
+     * @param rowIndex the zero-based row index
+     * @return the value at the specified row as an {@link Object}
+     * @throws IndexOutOfBoundsException if {@code rowIndex < 0 || rowIndex >= size()}
+     */
+    public abstract Object value(int rowIndex);
 }

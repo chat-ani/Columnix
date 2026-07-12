@@ -76,6 +76,15 @@ public final class LongColumn extends Column {
         return values.length;
     }
 
+    /**
+     * @param rowIndex
+     * @return index value of array values
+     */
+    @Override
+    public Object value(int rowIndex) {
+        return values[rowIndex];
+    }
+
     @Override
     public boolean equals(Object object) {
 
