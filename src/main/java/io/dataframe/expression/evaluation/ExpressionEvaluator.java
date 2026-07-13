@@ -2,10 +2,7 @@ package io.dataframe.expression.evaluation;
 
 import io.dataframe.column.Column;
 import io.dataframe.core.DataFrame;
-import io.dataframe.expression.ColumnExpression;
-import io.dataframe.expression.ComparisonExpression;
-import io.dataframe.expression.Expression;
-import io.dataframe.expression.LiteralExpression;
+import io.dataframe.expression.*;
 
 import java.util.Objects;
 
@@ -23,54 +20,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author Anirban Chatterjee
  */
-final class ExpressionEvaluator {
-
-    /**
-     * Validates that two operands can participate in an ordered comparison.
-     *
-     * <p>Both operands must be of the same runtime type and implement
-     * {@link Comparable}. This validation is required for relational
-     * comparison operators such as {@code >}, {@code >=}, {@code <},
-     * and {@code <=}.
-     *
-     * @param left the left operand
-     * @param right the right operand
-     * @throws IllegalArgumentException if the operands have different runtime
-     *                                  types or do not implement
-     *                                  {@link Comparable}
-     */
-    private static void requireComparableOperands(Object left, Object right) {
-
-        if (left instanceof Boolean) {
-            throw new IllegalArgumentException("Boolean values do not support relational comparisons.");
-        }
-
-        if (!left.getClass().equals(right.getClass())) {
-            throw new IllegalArgumentException("Comparison operands must have the same type.");
-        }
-
-        if (!(left instanceof Comparable<?>)) {
-            throw new IllegalArgumentException("Comparison operands must implement Comparable.");
-        }
-    }
-
-    /**
-     * Compares two comparable operands.
-     * <p>
-     * The operands are assumed to have already passed validation through
-     * {@link #requireComparableOperands(Object, Object)}.
-     * </p>
-     *
-     * @param left  the left operand
-     * @param right the right operand
-     * @return a negative integer, zero, or a positive integer as the left operand
-     *         is less than, equal to, or greater than the right operand
-     */
-    @SuppressWarnings("unchecked")
-    private static int compare(Object left, Object right) {
-
-        return ((Comparable<Object>) left).compareTo(right);
-    }
+final class ExpressionEvaluator extends ExpressionEvaluatorHelper {
 
     /**
      * Prevents instantiation of this utility class.
@@ -145,6 +95,20 @@ final class ExpressionEvaluator {
                     requireComparableOperands(left, right);
                     yield compare(left, right) <= 0;
                 }
+            };
+        }
+
+        if (expression instanceof LogicalExpression logicalExpression) {
+
+            Object left = evaluate(logicalExpression.left(), dataFrame, rowIndex);
+
+            Object right = evaluate(logicalExpression.right(), dataFrame, rowIndex);
+
+            requireBooleanOperands(left, right);
+
+            return switch (logicalExpression.operator()) {
+                case AND -> (Boolean) left && (Boolean) right;
+                case OR  -> (Boolean) left || (Boolean) right;
             };
         }
 
