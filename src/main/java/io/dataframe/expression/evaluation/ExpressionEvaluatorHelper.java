@@ -65,4 +65,20 @@ public class ExpressionEvaluatorHelper {
             throw new IllegalArgumentException("Logical operands must be of type Boolean.");
         }
     }
+
+    /**
+     * Validates that the supplied operand is of type {@link Boolean}.
+     * <p>
+     * The logical NOT operator requires its operand to evaluate to a boolean value.
+     * </p>
+     *
+     * @param value the operand to validate
+     * @throws IllegalArgumentException if the operand is not a {@link Boolean}
+     */
+    protected static void requireBooleanOperand(Object value) {
+
+        if (!(value instanceof Boolean)) {
+            throw new IllegalArgumentException("Logical operand must be of type Boolean.");
+        }
+    }
 }

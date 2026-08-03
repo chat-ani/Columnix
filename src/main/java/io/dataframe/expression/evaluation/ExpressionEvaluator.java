@@ -53,63 +53,76 @@ final class ExpressionEvaluator extends ExpressionEvaluatorHelper {
             throw new IndexOutOfBoundsException("Row index out of bounds: " + rowIndex);
         }
 
-        if (expression instanceof LiteralExpression<?> literalExpression) {
-            return literalExpression.value();
-        }
+        switch (expression) {
+            case LiteralExpression<?> literalExpression -> {
+                return literalExpression.value();
+            }
+            case ColumnExpression columnExpression -> {
 
-        if (expression instanceof ColumnExpression columnExpression) {
+                Column column = dataFrame.column(columnExpression.name());
 
-            Column column = dataFrame.column(columnExpression.name());
+                return column.value(rowIndex);
+            }
+            case ComparisonExpression comparisonExpression -> {
 
-            return column.value(rowIndex);
-        }
+                Object left = evaluate(comparisonExpression.left(), dataFrame, rowIndex);
 
-        if (expression instanceof ComparisonExpression comparisonExpression) {
+                Object right = evaluate(comparisonExpression.right(), dataFrame, rowIndex);
 
-            Object left = evaluate(comparisonExpression.left(), dataFrame, rowIndex);
+                return switch (comparisonExpression.operator()) {
 
-            Object right = evaluate(comparisonExpression.right(), dataFrame, rowIndex);
+                    case EQUALS -> Objects.equals(left, right);
 
-            return switch (comparisonExpression.operator()) {
+                    case NOT_EQUALS -> !Objects.equals(left, right);
 
-                case EQUALS -> Objects.equals(left, right);
+                    case GREATER_THAN -> {
+                        requireComparableOperands(left, right);
+                        yield compare(left, right) > 0;
+                    }
 
-                case NOT_EQUALS -> !Objects.equals(left, right);
+                    case GREATER_THAN_OR_EQUAL -> {
+                        requireComparableOperands(left, right);
+                        yield compare(left, right) >= 0;
+                    }
 
-                case GREATER_THAN -> {
-                    requireComparableOperands(left, right);
-                    yield compare(left, right) > 0;
-                }
+                    case LESS_THAN -> {
+                        requireComparableOperands(left, right);
+                        yield compare(left, right) < 0;
+                    }
 
-                case GREATER_THAN_OR_EQUAL -> {
-                    requireComparableOperands(left, right);
-                    yield compare(left, right) >= 0;
-                }
+                    case LESS_THAN_OR_EQUAL -> {
+                        requireComparableOperands(left, right);
+                        yield compare(left, right) <= 0;
+                    }
+                };
+            }
+            case LogicalExpression logicalExpression -> {
 
-                case LESS_THAN -> {
-                    requireComparableOperands(left, right);
-                    yield compare(left, right) < 0;
-                }
+                Object left = evaluate(logicalExpression.left(), dataFrame, rowIndex);
 
-                case LESS_THAN_OR_EQUAL -> {
-                    requireComparableOperands(left, right);
-                    yield compare(left, right) <= 0;
-                }
-            };
-        }
+                Object right = evaluate(logicalExpression.right(), dataFrame, rowIndex);
 
-        if (expression instanceof LogicalExpression logicalExpression) {
+                requireBooleanOperands(left, right);
 
-            Object left = evaluate(logicalExpression.left(), dataFrame, rowIndex);
+                return switch (logicalExpression.operator()) {
+                    case AND -> (Boolean) left && (Boolean) right;
+                    case OR -> (Boolean) left || (Boolean) right;
+                };
+            }
+            case NotExpression notExpression -> {
 
-            Object right = evaluate(logicalExpression.right(), dataFrame, rowIndex);
+                Object value = evaluate(
+                        notExpression.expression(),
+                        dataFrame,
+                        rowIndex
+                );
 
-            requireBooleanOperands(left, right);
+                requireBooleanOperand(value);
 
-            return switch (logicalExpression.operator()) {
-                case AND -> (Boolean) left && (Boolean) right;
-                case OR  -> (Boolean) left || (Boolean) right;
-            };
+                return !(Boolean) value;
+            }
+            default -> {
+            }
         }
 
         throw new UnsupportedOperationException("Unsupported expression type: " + expression.getClass().getSimpleName());
